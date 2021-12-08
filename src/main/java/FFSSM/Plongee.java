@@ -4,6 +4,7 @@
 package FFSSM;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,7 +12,7 @@ public class Plongee {
 
 	public Site lieu;
 
-	public Moniteur chefDePalanquee;
+	public Moniteur chef;
 
 	public LocalDate date;
 
@@ -19,32 +20,43 @@ public class Plongee {
 
 	public int duree;
 
-	public Plongee(Site lieu, Moniteur chefDePalanquee, LocalDate date, int profondeur, int duree) {
+	ArrayList<Licence> palanquees;
+
+
+	public Plongee(Site lieu, Moniteur chef, LocalDate date, int profondeur, int duree) {
 		this.lieu = lieu;
-		this.chefDePalanquee = chefDePalanquee;
+		this.chef = chef;
 		this.date = date;
 		this.profondeur = profondeur;
 		this.duree = duree;
+		this.palanquees = new ArrayList<>();
 	}
 
-	public void ajouteParticipant(Plongeur participant) {
-		// TODO: Implémenter cette méthode
-		throw new UnsupportedOperationException("Pas encore implémenté");
+	public Plongee(Moniteur chef){
+		this.chef = chef;
+		this.palanquees = new ArrayList<>();
+	}
+
+
+	public void ajouteParticipant(Plongeur participant) throws Exception {
+		palanquees.add(participant.derniereLicence());
+	}
+
+	public boolean estConforme() throws Exception {
+		for (Licence l : palanquees){
+			if (!l.estValide(this.date)){
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public LocalDate getDate() {
 		return date;
 	}
 
-	/**
-	 * Détermine si la plongée est conforme. 
-	 * Une plongée est conforme si tous les plongeurs de la palanquée ont une
-	 * licence valide à la date de la plongée
-	 * @return vrai si la plongée est conforme
-	 */
-	public boolean estConforme() {
-		// TODO: Implémenter cette méthode
-		throw new UnsupportedOperationException("Pas encore implémenté");
+	public ArrayList<Licence> getPalanquees() {
+		return palanquees;
 	}
 
 }
